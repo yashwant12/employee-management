@@ -10,6 +10,8 @@ import java.util.List;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
+    byte[] picture;
+    boolean update;
 
     @Autowired
     private EmployeeDAO employeeDAO;
@@ -23,14 +25,20 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional
     public void saveEmployee(Employee employee) {
+        if(employee.getPicture().length==0 && update==true){
+            this.update = false;
+            employee.setPicture(this.picture);
+        }
         employeeDAO.saveEmployee(employee);
     }
 
     @Override
     @Transactional
     public Employee getEmployee(int theId) {
-
-        return employeeDAO.getEmployee(theId);
+        Employee employee = employeeDAO.getEmployee(theId);
+        this.picture = employee.getPicture();
+        this.update = true;
+        return employee;
     }
 
     @Override
